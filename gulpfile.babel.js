@@ -1,7 +1,6 @@
 import gulp from 'gulp';
 import gutil from 'gulp-util';
 import webpack from 'webpack';
-import WDS from 'webpack-dev-server';
 import clean from 'gulp-clean';
 import runSequence from 'run-sequence';
 import babel from 'gulp-babel';
@@ -27,16 +26,15 @@ gulp.task('babel', (cb) => {
       ]
     }
 
-  }, (err, stats) => {
-    if(err) throw new gutil.PluginError("webpack", err);
+  }, (err) => {
+    if (err) throw new gutil.PluginError('webpack', err);
     /*
     console.log(stats.toString({
       colors: true
     }));
     */
 
-    if (!DEBUG)
-      cb();
+    if (!DEBUG) cb();
   });
 });
 
@@ -80,7 +78,7 @@ gulp.task('watch-client', () => {
 
   if (DEBUG) {
     gulp.watch('app/static/*', ['static']);
-    gulp.watch('app/build/*', ({ path }, b, c) => {
+    gulp.watch('app/build/*', ({ path }) => {
       livereload.changed(path);
     });
   }

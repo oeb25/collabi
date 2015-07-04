@@ -24,7 +24,10 @@
   "devDependencies": {
     "babel": "^5.6.14",
     "babel-core": "^5.6.15",
+    "babel-eslint": "^3.1.20",
     "babel-loader": "^5.3.0",
+    "eslint": "^0.24.0",
+    "eslint-plugin-react": "^2.6.4",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.1.0",
     "gulp-clean": "^0.3.1",
@@ -33,7 +36,6 @@
     "node-libs-browser": "^0.5.2",
     "run-sequence": "^1.1.1",
     "webpack": "^1.10.1",
-    "webpack-dev-server": "^1.10.1"
   },
   "dependencies": {
     "koa": "^0.21.0",
