@@ -58,16 +58,22 @@ gulp.task('build-server', () => {
 
 gulp.task('watch', () => {
   DEBUG = true;
+});
 
+gulp.task('watch-client', () => {
   runSequence(
     'clean-client',
     ['static', 'babel']
   );
 
+  gulp.watch('static/*', ['static']);
+});
+
+gulp.task('watch-server', () => {
   runSequence(
     'clean-server',
     'build-server'
   );
 
-  gulp.watch('static/*', ['static']);
+  gulp.watch('server/src/*', ['build-server']);
 });
