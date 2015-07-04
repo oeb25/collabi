@@ -1,21 +1,23 @@
 import gulp from 'gulp';
+import gutil from 'gulp-util';
 import webpack from 'webpack';
 import WDS from 'webpack-dev-server';
 import clean from 'gulp-clean';
 import runSequence from 'run-sequence';
 import babel from 'gulp-babel';
+import livereload from 'gulp-livereload';
 
 let DEBUG = false;
 
 gulp.task('babel', (cb) => {
   webpack({
 
-    entry: './src/main.js',
+    entry: './app/src/main.js',
 
     watch: DEBUG,
 
     output: {
-      path: './build',
+      path: './app/build',
       filename: 'bundle.js'
     },
 
@@ -26,9 +28,12 @@ gulp.task('babel', (cb) => {
     }
 
   }, (err, stats) => {
+    if(err) throw new gutil.PluginError("webpack", err);
+    /*
     console.log(stats.toString({
       colors: true
-    }))
+    }));
+    */
 
     if (!DEBUG)
       cb();
@@ -36,12 +41,12 @@ gulp.task('babel', (cb) => {
 });
 
 gulp.task('static', () => {
-  return gulp.src('static/*')
-    .pipe(gulp.dest('build/'));
+  return gulp.src('app/static/*')
+    .pipe(gulp.dest('app/build/'));
 });
 
 gulp.task('clean-client', () => {
-  return gulp.src('build/*')
+  return gulp.src('app/build/*')
     .pipe(clean());
 });
 
@@ -58,6 +63,13 @@ gulp.task('build-server', () => {
 
 gulp.task('watch', () => {
   DEBUG = true;
+
+  livereload.listen();
+
+  return runSequence(
+    'watch-client',
+    'watch-server'
+  );
 });
 
 gulp.task('watch-client', () => {
@@ -66,7 +78,12 @@ gulp.task('watch-client', () => {
     ['static', 'babel']
   );
 
-  gulp.watch('static/*', ['static']);
+  if (DEBUG) {
+    gulp.watch('app/static/*', ['static']);
+    gulp.watch('app/build/*', ({ path }, b, c) => {
+      livereload.changed(path);
+    });
+  }
 });
 
 gulp.task('watch-server', () => {
@@ -75,5 +92,7 @@ gulp.task('watch-server', () => {
     'build-server'
   );
 
-  gulp.watch('server/src/*', ['build-server']);
+  if (DEBUG) {
+    gulp.watch('server/src/*', ['build-server']);
+  }
 });
